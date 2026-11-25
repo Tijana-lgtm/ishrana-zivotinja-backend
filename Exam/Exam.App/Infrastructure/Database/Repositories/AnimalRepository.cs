@@ -13,12 +13,29 @@ namespace Exam.App.Infrastructure.Database.Repositories
             _context = context;
         }
 
-        public async Task<List<Animal>> GetAllAsync()
+        public async Task<List<Animal>> GetAllAsync(int? animalSpeciesId, int? cageId, bool unassigned)
         {
-            return await _context.Animals
+            var query = _context.Animals
                 .Include(a => a.AnimalSpecies)
                 .Include(a => a.Cage)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (animalSpeciesId.HasValue)
+            {
+                query = query.Where (a=>a.AnimalSpeciesId == animalSpeciesId.Value);
+            }
+
+            if (cageId.HasValue)
+            {
+                query = query.Where (a=>a.CageId == cageId.Value);
+            }
+
+            if (unassigned)
+            {
+                query = query.Where(a => a.CageId == null);
+            }
+            return await query.ToListAsync();
+
         }
 
         public async Task<Animal> GetByIdAsync(int id)
@@ -52,6 +69,16 @@ namespace Exam.App.Infrastructure.Database.Repositories
             _context.Animals.Remove(animal);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<List<AnimalSpecies>> GetAllSpeciesAsync()
+        {
+            return await _context.AnimalSpecies.ToListAsync();
+        }
+
+        public async Task<List<Cage>> GetAllCagesAsync()
+        {
+            return await _context.Cages.ToListAsync();
         }
     }
 }

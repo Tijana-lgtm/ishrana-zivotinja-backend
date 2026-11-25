@@ -3,8 +3,6 @@ using Exam.App.Domain;
 using Exam.App.Domain.Repositories;
 using Exam.App.Services.Dtos.Animals;
 using Exam.App.Services.Exceptions;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.VisualBasic;
 
 namespace Exam.App.Services
 {
@@ -19,9 +17,9 @@ namespace Exam.App.Services
             _mapper = mapper;
         }
 
-        public async Task<List<ShowAnimalDto>> GetAllAsync()
+        public async Task<List<ShowAnimalDto>> GetAllAsync (int? animalSpeciesId, int? cageId, bool unassigned)
         {
-            var animals = await _animalRepository.GetAllAsync();
+            var animals = await _animalRepository.GetAllAsync(animalSpeciesId, cageId, unassigned);
             return _mapper.Map<List<ShowAnimalDto>>(animals);
         }
 
@@ -63,6 +61,18 @@ namespace Exam.App.Services
                 throw new NotFoundException(id);
 
             await _animalRepository.DeleteAsync(id);
+        }
+
+        public async Task<List<AnimalSpeciesDto>> GetSpeciesAsync()
+        {
+            var animalSpecies = await _animalRepository.GetAllSpeciesAsync();
+            return _mapper.Map<List<AnimalSpeciesDto>>(animalSpecies);
+        }
+
+        public async Task<List<CageDto>> GetCagesAsync()
+        {
+            var cages = await _animalRepository.GetAllCagesAsync();
+            return _mapper.Map<List<CageDto>>(cages);
         }
     }
 }

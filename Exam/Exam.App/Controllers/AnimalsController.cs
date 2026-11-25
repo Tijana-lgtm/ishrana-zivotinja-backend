@@ -18,9 +18,12 @@ namespace Exam.App.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(
+            [FromQuery] int? animalSpeciesId,
+            [FromQuery] int? cageId,
+            [FromQuery] bool unassigned = false)
         {
-            return Ok(await _animalService.GetAllAsync());
+            return Ok(await _animalService.GetAllAsync(animalSpeciesId, cageId, unassigned));
         }
 
         [HttpGet("{id}")]
@@ -59,5 +62,16 @@ namespace Exam.App.Controllers
             return NoContent();
         }
 
+        [HttpGet("species")]
+        public async Task <IActionResult> GetAllSpecies ()
+        {
+            return Ok (await _animalService.GetSpeciesAsync());
+        }
+
+        [HttpGet("cages")]
+        public async Task <IActionResult> GetCagesAsync ()
+        {
+            return Ok (await _animalService.GetCagesAsync());
+        }
     }
 }

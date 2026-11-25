@@ -23,6 +23,10 @@ namespace Exam.App.Services.Mappers
             CreateMap<Animal, ShowAnimalDto>()
                 .ForMember(dest => dest.AnimalSpeciesName, opt => opt.MapFrom(src => src.AnimalSpecies.Name))
                 .ForMember(dest => dest.CageCode, opt => opt.MapFrom(src => src.Cage!.Code));
+
+            CreateMap<AnimalSpecies, AnimalSpeciesDto>();
+
+            CreateMap<Cage, CageDto>();
         }
     }
 }
